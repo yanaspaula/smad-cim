@@ -1,5 +1,5 @@
 import sys
-sys.path.insert(1, '/home/nana/Documents/Estágio UFC/Codes/SMAD CIM/smad-cim')
+sys.path.insert(1, '/home/lucas/Insync/lucassmelo@dee.ufc.br/GoogleDrive/GDrive/workspace/smad-cim')
 
 import datetime
 import os
@@ -58,7 +58,7 @@ class MosaikSim(MosaikCon):
 
     def step(self, time, inputs):
         print(inputs)
-        return
+        return time + self.step_size
 
     def get_data(self, outputs): # Dúvida 8
         data = {}
@@ -75,6 +75,7 @@ class AgenteCom(AgenteSMAD):
     def __init__(self, aid: AID, substation: str, IEDs: List[IED], debug=False):
         super().__init__(aid, substation, debug)
 
+        self.mosaik_sim = MosaikSim(self)
         # Instance IEDs
         self.IEDs = {}
         for ied in IEDs:

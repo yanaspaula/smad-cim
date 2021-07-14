@@ -35,7 +35,7 @@ SIM_CONFIG = {
 """
 # QTD_HOURS = 1 * 23
 START = '01/10/2019 - 00:00:00' # Dúvida 1
-END = 1 * 60	# X minutes
+END = 10 * 60	# X minutes
 # END = int(QTD_HOURS * 60 * 60)
 
 
@@ -48,15 +48,19 @@ world = mosaik.World(SIM_CONFIG)
 # Starts simulators
 rand_sim = world.start('RandomSim', eid_prefix = "IED_read")
 # collector = world.start('Collector', step_size = 60)
-acom = world.start('AgCom', eid_prefix = 'AgenteCom_', start = START, step_size = 1 * 60)
+acom_sim = world.start('AgCom', eid_prefix = 'AgenteCom_', start = START, step_size = 1 * 60)
 # acom = world.start('AgCom', eid_prefix = 'AgenteCom_', step_size = 1 * 60)
+
 
 # Creates instances
 ieds = rand_sim.RandomModel()
+acom = acom_sim.AgCom()
 # monitor = collector.Monitor()
 
 # Connects entities
 #world.connect(ieds, monitor, 'val')
-world.connect(ieds, agent, 'val', 'acom_attr')
+print(ieds)
+print(acom)
+world.connect(ieds, acom, ['val', 'acom_attr'])
 
 world.run(until = END)

@@ -1,5 +1,5 @@
 import sys
-sys.path.insert(1, '/home/nana/Documents/Estágio UFC/Codes/SMAD CIM/smad-cim/core')
+sys.path.insert(1, '/home/lucas/Insync/lucassmelo@dee.ufc.br/GoogleDrive/GDrive/workspace/smad-cim/core')
 from sys import argv
 from acom import *
 from pade.misc.utility import display_message, start_loop
