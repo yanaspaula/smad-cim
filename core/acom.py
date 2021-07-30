@@ -1,13 +1,11 @@
-import sys
-sys.path.insert(1, '/home/lucas/Insync/lucassmelo@dee.ufc.br/GoogleDrive/GDrive/workspace/smad-cim')
-
 import datetime
-import os
+import sys, os
 import time
 from random import random
 from uuid import uuid4
 from typing import List
 
+sys.path.append(os.path.dirname(sys.path[0])) # imports path for information_model
 from information_model import OutageEvent as out
 from information_model import SwitchingCommand as swc
 from pade.acl.aid import AID

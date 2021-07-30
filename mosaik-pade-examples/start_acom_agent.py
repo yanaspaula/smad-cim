@@ -1,14 +1,8 @@
-import sys
-sys.path.insert(1, '/home/lucas/Insync/lucassmelo@dee.ufc.br/GoogleDrive/GDrive/workspace/smad-cim/core')
 from sys import argv
+import sys, os
+sys.path.append(os.path.join(os.path.dirname(sys.path[0]), 'core')) # imports path for acom
 from acom import *
 from pade.misc.utility import display_message, start_loop
-
-'''
-	DÚVIDAS
-
-1. Criei __init__.py em pastas, mas não consegui importar classes - Apenas com sys
-'''
 
 if __name__ == '__main__':
 	# Inicialização
