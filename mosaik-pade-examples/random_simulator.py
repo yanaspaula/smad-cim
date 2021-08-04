@@ -20,10 +20,9 @@ META = {
 class Model:
 	def __init__(self):
 		self.val = random.random()
-	# 	self.val = val
 	
-	# def step(self):
-	# 	self.val += random.random()
+	def step(self):
+		self.val += random.random()
 
 """
 	Creates and stores models. 
@@ -32,8 +31,6 @@ class Model:
 class Simulator(object):
 	def __init__(self):
 		self.models = []
-
-
 		self.data = []
 
 	def add_model(self):
@@ -43,7 +40,7 @@ class Simulator(object):
 
 	def step(self): 
 		for i, model in enumerate(self.models):
-			# model.step()
+			model.step()
 			self.data[i].append(model.val) # adds a *model* *val* to in the ``Simulator`` object *data* instance
 
 """
