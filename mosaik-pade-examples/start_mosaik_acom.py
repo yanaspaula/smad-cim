@@ -1,15 +1,4 @@
-"""
-	Dúvidas:
-
-1. Já preciso definir um tempo de simulação longo?
-
-3. Como determinar o caminho ao acom?
-
-4. Como escrever o step do acom??
-
-5. Devo adaptar o RandomSim para disponibilizar uma lista com aid, substation e ieds?
-"""
-
+# start_mosaik_acom.py
 import mosaik
 import mosaik.util
 import random_simulator
@@ -34,7 +23,7 @@ SIM_CONFIG = {
 	Determinações dos tempos de simulação no Mosaik:
 """
 # QTD_HOURS = 1 * 23
-START = '01/10/2019 - 00:00:00' # Dúvida 1
+START = '01/10/2019 - 00:00:00' 
 END = 10 * 60	# X minutes
 # END = int(QTD_HOURS * 60 * 60)
 
