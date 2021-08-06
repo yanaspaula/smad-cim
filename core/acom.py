@@ -1,10 +1,11 @@
 import datetime
-import os
+import sys, os
 import time
 from random import random
 from uuid import uuid4
 from typing import List
 
+sys.path.append(os.path.dirname(sys.path[0])) # imports path for information_model
 from information_model import OutageEvent as out
 from information_model import SwitchingCommand as swc
 from pade.acl.aid import AID
@@ -12,17 +13,67 @@ from pade.acl.messages import ACLMessage
 from pade.behaviours.highlevel import (FipaRequestProtocol,
                                        FipaSubscribeProtocol)
 from pade.misc.utility import display_message
+from pade.drivers.mosaik_driver import MosaikCon
 
 from core.common import AgenteSMAD, dump, to_elementtree, to_string, validate
 from core.common.enums import *
 from core.ied import FileIED, SimulatedIED, IED
 
 
+MOSAIK_MODELS = {
+    'api_version': '2.2',
+    'models': {
+        'AgCom': {
+            'public': True,
+            'params': [],
+            'attrs': ['acom_attr'],
+        },
+    },
+}
+
+# Classe integradora do PADE-Mosaik
+class MosaikSim(MosaikCon):
+
+    def __init__(self, agent):
+        super(MosaikSim, self).__init__(MOSAIK_MODELS, agent)
+        self.entities = list()
+
+    def init(self, sid, eid_prefix, start, step_size):       
+        self.eid_prefix = eid_prefix
+        self.eid = '{}{}'.format(self.eid_prefix, '0')
+        self.start = start
+        self.step_size = step_size
+
+        return MOSAIK_MODELS
+
+    def create(self, num, model):
+        entities_info = list()
+        for i in range(num):
+            entities_info.append(
+                {'eid': '{}.{}'.format(self.sim_id, i), 'type': model, 'rel': []})
+        return entities_info
+
+
+    def step(self, time, inputs):
+        print(inputs)
+        return time + self.step_size
+
+    def get_data(self, outputs): # Dúvida 8
+        data = {}
+        for eid, attrs in outputs.items():
+            data[eid] = {}
+            for attr in attrs:
+                if attr not in MOSAIK_MODELS['models']['AgCom']['attrs']:
+                    raise ValueError('Unknown output attribute: {}'.format(attr))
+                data[eid][attr] = getattr(self.agent, 'acom_attr')
+        return data
+
 class AgenteCom(AgenteSMAD):
 
     def __init__(self, aid: AID, substation: str, IEDs: List[IED], debug=False):
         super().__init__(aid, substation, debug)
 
+        self.mosaik_sim = MosaikSim(self)
         # Instance IEDs
         self.IEDs = {}
         for ied in IEDs:
