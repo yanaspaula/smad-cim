@@ -26,7 +26,7 @@ MOSAIK_MODELS = {
         'AgCom': {
             'public': True,
             'params': [],
-            'attrs': ['acom_attr'],
+            'attrs': ['v_out'],
         },
     },
 }
@@ -58,14 +58,16 @@ class MosaikSim(MosaikCon):
         print(inputs)
         return time + self.step_size
 
-    def get_data(self, outputs): # Dúvida 8
+    def get_data(self, outputs):
         data = {}
         for eid, attrs in outputs.items():
-            data[eid] = {}
+            # data[eid]['v_out'] = random.random() # Indicar valores randômmicos passados ao Mosaik nesse dicionário
+            data[eid]['v_out'] = 1.234567 # Indicar valores randômmicos passados ao Mosaik nesse dicionário
             for attr in attrs:
                 if attr not in MOSAIK_MODELS['models']['AgCom']['attrs']:
                     raise ValueError('Unknown output attribute: {}'.format(attr))
-                data[eid][attr] = getattr(self.agent, 'acom_attr')
+                data[eid][attr] = getattr(self.agent, 'v_out') 
+        print(data)
         return data
 
 class AgenteCom(AgenteSMAD):
