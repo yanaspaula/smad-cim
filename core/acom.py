@@ -31,6 +31,14 @@ MOSAIK_MODELS = {
     },
 }
 
+"""
+    DÚVIDAS
+
+    1. Pq o get_data() reinicializa o valor de 'v_out' após o getattr? O dict data não deveria ter essa informação?
+    ex: data = {'AgComSim1-0.0': {'v_out': 0.6235707471494064}}
+"""
+
+
 # Classe integradora do PADE-Mosaik
 class MosaikSim(MosaikCon):
 
@@ -55,19 +63,24 @@ class MosaikSim(MosaikCon):
 
 
     def step(self, time, inputs):
-        print(inputs)
+        # print(inputs) # Não está recebendo nenhum valor; steps printam dicionário vazio {}
         return time + self.step_size
 
     def get_data(self, outputs):
         data = {}
+        print("-----------")
+        print("QUERY: {}".format(outputs)) # Query for get_data: a dict with a list of wanted queries (OK)
         for eid, attrs in outputs.items():
-            # data[eid]['v_out'] = random.random() # Indicar valores randômmicos passados ao Mosaik nesse dicionário
-            data[eid]['v_out'] = 1.234567 # Indicar valores randômmicos passados ao Mosaik nesse dicionário
+            print("SIMULADOR: {}".format(eid))
+            data[eid] = {'v_out': random()}
+            print(data) # {'AgComSim0-0.0': {'v_out': 0.5772882486835605}}
+
             for attr in attrs:
                 if attr not in MOSAIK_MODELS['models']['AgCom']['attrs']:
                     raise ValueError('Unknown output attribute: {}'.format(attr))
-                data[eid][attr] = getattr(self.agent, 'v_out') 
-        print(data)
+                data[eid][attr] = getattr(self.agent, 'v_out')
+                print("Após getattr, valor do dicionário reinicializa: {}".format(data[eid][attr])) # pq valor reinicializa? p onde vai e como buscar no mosaik?
+        print(data) # Valor reinicializa para None (valor inicial).
         return data
 
 class AgenteCom(AgenteSMAD):
@@ -76,6 +89,8 @@ class AgenteCom(AgenteSMAD):
         super().__init__(aid, substation, debug)
 
         self.mosaik_sim = MosaikSim(self)
+        self.v_out = None # Valor inicial de v_out
+
         # Instance IEDs
         self.IEDs = {}
         for ied in IEDs:

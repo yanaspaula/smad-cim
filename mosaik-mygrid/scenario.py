@@ -35,7 +35,7 @@ SIM_CONFIG = {
 """
 # QTD_HOURS = 1 * 23
 START = '01/10/2019 - 00:00:00' 
-END = 100 * 60	# X minutes
+END = 1 * 60	# X minutes
 # END = int(QTD_HOURS * 60 * 60)
 
 def load_nodes(file):
