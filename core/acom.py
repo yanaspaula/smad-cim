@@ -2,6 +2,7 @@ import datetime
 import sys, os
 import time
 from random import random
+from datetime import datetime
 from uuid import uuid4
 from typing import List
 
@@ -34,8 +35,8 @@ MOSAIK_MODELS = {
 """
     DÚVIDAS
 
-    1. Pq o get_data() reinicializa o valor de 'v_out' após o getattr? O dict data não deveria ter essa informação?
-    ex: data = {'AgComSim1-0.0': {'v_out': 0.6235707471494064}}
+    1. Random em AgenteCom não se modifica mesmo com random.seed(datetime.now()).
+    2. PRECISO usar o getattr? Não posso simplesmente criar o valor aleatório do dicionário em get_data()?
 """
 
 
@@ -63,24 +64,22 @@ class MosaikSim(MosaikCon):
 
 
     def step(self, time, inputs):
-        # print(inputs) # Não está recebendo nenhum valor; steps printam dicionário vazio {}
+        self.agent.v_out += random();
         return time + self.step_size
 
     def get_data(self, outputs):
         data = {}
-        print("-----------")
-        print("QUERY: {}".format(outputs)) # Query for get_data: a dict with a list of wanted queries (OK)
+        #print("-----------")
+        #print("QUERY: {}".format(outputs)) # Query for get_data: a dict with a list of wanted queries (OK)
         for eid, attrs in outputs.items():
-            print("SIMULADOR: {}".format(eid))
-            data[eid] = {'v_out': random()}
-            print(data) # {'AgComSim0-0.0': {'v_out': 0.5772882486835605}}
+            #print("SIMULADOR: {}".format(eid))
+            data[eid] = {}
 
             for attr in attrs:
                 if attr not in MOSAIK_MODELS['models']['AgCom']['attrs']:
                     raise ValueError('Unknown output attribute: {}'.format(attr))
-                data[eid][attr] = getattr(self.agent, 'v_out')
-                print("Após getattr, valor do dicionário reinicializa: {}".format(data[eid][attr])) # pq valor reinicializa? p onde vai e como buscar no mosaik?
-        print(data) # Valor reinicializa para None (valor inicial).
+                data[eid][attr] = getattr(self.agent, 'v_out') 
+        #print(data)
         return data
 
 class AgenteCom(AgenteSMAD):
@@ -89,7 +88,7 @@ class AgenteCom(AgenteSMAD):
         super().__init__(aid, substation, debug)
 
         self.mosaik_sim = MosaikSim(self)
-        self.v_out = None # Valor inicial de v_out
+        self.v_out = random()
 
         # Instance IEDs
         self.IEDs = {}

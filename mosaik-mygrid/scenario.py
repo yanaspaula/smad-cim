@@ -35,7 +35,7 @@ SIM_CONFIG = {
 """
 # QTD_HOURS = 1 * 23
 START = '01/10/2019 - 00:00:00' 
-END = 1 * 60	# X minutes
+END = 5 * 60	# X minutes
 # END = int(QTD_HOURS * 60 * 60)
 
 def load_nodes(file):
@@ -81,11 +81,16 @@ def create_scenario(sim_config, acom_sim_names):
     for ag in acom_agents:
         # print(ag[0])
         world.connect(ag[0], monitor, 'v_out')
+    print("---------Collector connected correctly--------")
 
-    # nodes = [e for e in _mygrid if e.type in ('RefBus', 'PQBus')]
-    # nodes = {str(n.eid): n for n in nodes}
-    # for node_id, acom_agent in zip(,acom_agents)
-        # print('>>> INFO: {} connected with {}.'.format(nodes[str(node_id)].full_id, prosumer_agent[0].full_id))
+    nodes = [e for e in _mygrid if e.type in ('RefBus', 'PQBus')]
+    nodes = {str(n.eid): n for n in nodes}
+    for acom_agent, node_id in zip(acom_agents, range(len(acom_agents))): # DÚVIDA: em start_mosaik_sim.py, config_dict.keys() = config_dict[node] == node_id???
+        # print(acom_agent)
+        # print(node_id)
+        world.connect(acom_agent, nodes[node_id], 'v_out')
+        # print('>>> INFO: {} connected with {}.'.format(acom_agent.full_id, nodes[node_id].full_id)
+        #connections.setdefault(prosumer.full_id, []).append(nodes[node_id].full_id)
 
     world.run(until = END)
 
