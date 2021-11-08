@@ -18,7 +18,8 @@ conda activate {env_name}
 2. Install pade-plus:
 ```
 git clone https://github.com/bressanmarcos/pade-plus
-
+```
+```
 python -m pip install ./pade-plus
 
 ```
@@ -36,5 +37,5 @@ python start_acom.py 20000
 
 5. Execute mosaik scenario:
 ```
-python scenario.py
+python demo.py
 ```
